@@ -48,8 +48,10 @@ editor:
   #   error = reject the save, warn = allow but warn, off = no check.
   overlap-policy: "warn"
   # Base URL of the BlueMap web app where the editor addon is served.
-  # /continent editor appends "?token=..." to this link.
-  editor-url: "http://localhost:8100/#continent-editor"
+  # /continent editor inserts "?token=..." as a query parameter (before any
+  # "#fragment"). Keep the token in the query string: BlueMap rewrites the URL
+  # hash on load, so a token placed in the fragment would be lost.
+  editor-url: "http://localhost:8100/"
   # CORS: only these origins may call the REST API from a browser.
   # Set this to your BlueMap web app origin(s). "*" is allowed for local testing only.
   cors-allowed-origins:

@@ -123,9 +123,20 @@ public final class ContinentRegionsPlugin extends JavaPlugin {
         getLogger().info("ContinentRegions disabled.");
     }
 
-    /** Builds the editor URL handed to an admin, appending the session token. */
+    /**
+     * Builds the editor URL handed to an admin, inserting the session token as a
+     * query parameter <em>before</em> any {@code #fragment}. BlueMap is a single-page
+     * app that rewrites {@code location.hash} on load, so a token placed in the
+     * fragment (e.g. {@code .../#continent-editor?token=...}) is lost before the
+     * editor addon reads it. Keeping the token in the query string survives that.
+     */
     public String buildEditorLink(String token) {
-        return configManager.editorUrl() + "?token=" + token;
+        final String base = configManager.editorUrl();
+        final int hash = base.indexOf('#');
+        final String head = hash >= 0 ? base.substring(0, hash) : base;
+        final String fragment = hash >= 0 ? base.substring(hash) : "";
+        final String separator = head.contains("?") ? "&" : "?";
+        return head + separator + "token=" + token + fragment;
     }
 
     private ContinentRepository createRepository() {
