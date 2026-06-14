@@ -32,7 +32,7 @@ repositories {
 
 dependencies {
     // Provided by the server at runtime — never bundled into the jar.
-    compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:26.1.2.build.70-stable")
     // Pinned to match the dev runtime (runServer): WorldEdit 7.3.11 / WorldGuard 7.0.13.
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.3.11")
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.13")
