@@ -39,7 +39,7 @@ dependencies {
     compileOnly("de.bluecolored:bluemap-api:2.7.8")
 
     // Bundled (shaded) third-party runtime dependencies.
-    implementation("com.google.code.gson:gson:2.11.0")
+    implementation("com.google.code.gson:gson:2.14.0")
     // SQLite backend (v2). Deliberately NOT relocated: the xerial driver loads a
     // native library from a package-derived resource path, which relocation would
     // break. Bukkit's per-plugin classloader isolates it from other plugins.
