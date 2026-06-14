@@ -7,6 +7,13 @@ updates:
     open-pull-requests-limit: 5
     labels:
       - dependencies
+    ignore:
+      # Platform APIs are pinned to the supported Minecraft version / dev runtime
+      # on purpose — don't let Dependabot bump them.
+      - dependency-name: "io.papermc.paper:paper-api"
+      - dependency-name: "com.sk89q.worldedit:worldedit-bukkit"
+      - dependency-name: "com.sk89q.worldguard:worldguard-bukkit"
+      - dependency-name: "de.bluecolored:bluemap-api"
 
   - package-ecosystem: github-actions
     directory: "/"
