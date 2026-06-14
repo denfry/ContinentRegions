@@ -34,7 +34,7 @@ jobs:
         run: ./gradlew build --no-daemon --stacktrace
 
       - name: Publish GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ github.event.inputs.tag || github.ref_name }}
           name: ContinentRegions ${{ github.event.inputs.tag || github.ref_name }}
