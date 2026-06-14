@@ -1,0 +1,51 @@
+name: 🐛 Bug report
+description: Report a problem with ContinentRegions
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to file a bug! Please fill in the details below.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear description of the bug and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Run '/continent ...'
+        2. Open the editor and ...
+        3. See error
+    validations:
+      required: true
+  - type: input
+    id: plugin-version
+    attributes:
+      label: ContinentRegions version
+      placeholder: "2.0.0"
+    validations:
+      required: true
+  - type: input
+    id: server-version
+    attributes:
+      label: Server version
+      placeholder: "Paper 1.21.4 build #..."
+    validations:
+      required: true
+  - type: input
+    id: deps-version
+    attributes:
+      label: WorldEdit / WorldGuard / BlueMap versions
+      placeholder: "WE 7.3.11, WG 7.0.13, BlueMap 5.16"
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs
+      description: Paste console errors or a link to a paste service. They are automatically formatted.
+      render: shell
