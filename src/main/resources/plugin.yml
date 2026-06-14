@@ -1,0 +1,39 @@
+name: ContinentRegions
+version: '${version}'
+main: com.example.continentregions.ContinentRegionsPlugin
+api-version: '1.21'
+description: Draw continents on BlueMap and save them as WorldGuard polygon regions.
+authors: [ContinentRegions]
+depend:
+  - WorldGuard
+  - WorldEdit
+softdepend:
+  - BlueMap
+
+commands:
+  continent:
+    description: Continent region editor
+    usage: /continent <editor|list|create|delete|apply|reload|export|import|flag|tp|preset|simplify|rollback|history|toggle>
+    permission: continent.view
+
+permissions:
+  continent.admin:
+    description: Full access
+    default: op
+    children:
+      continent.editor: true
+      continent.view: true
+      continent.flag: true
+      continent.delete: true
+  continent.editor:
+    description: Can use BlueMap continent editor
+    default: op
+  continent.view:
+    description: Can view continent list
+    default: true
+  continent.flag:
+    description: Can edit WorldGuard flags
+    default: op
+  continent.delete:
+    description: Can delete continents
+    default: op

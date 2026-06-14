@@ -1,0 +1,33 @@
+# Gradle
+.gradle/
+build/
+
+# Dev runtime server (run-paper) — contains world data, downloaded plugins,
+# server.properties (incl. a dev RCON password). Never commit.
+run/
+
+# Claude / local tooling
+.claude/
+
+# Internal spec (Russian) — not part of the published plugin
+*_TZ.pdf
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.classpath
+.project
+out/
+bin/
+
+# Logs & crash dumps
+*.log
+*.hprof
+
+# OS
+.DS_Store
+Thumbs.db

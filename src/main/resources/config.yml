@@ -1,0 +1,85 @@
+# ContinentRegions configuration
+# See the technical specification (section 15) for the canonical layout.
+
+settings:
+  # UI/message language (en supported in MVP).
+  language: en
+  debug: false
+
+worldguard:
+  # Region ids created in WorldGuard are prefixed with this value.
+  region-prefix: "continent_"
+  default-min-y: -64
+  default-max-y: 320
+  default-priority: 10
+  # Recreate a WorldGuard region if one with the same id already exists.
+  overwrite-existing-regions: true
+  # Persist WorldGuard region storage right after a change.
+  save-after-change: true
+
+bluemap:
+  enabled: true
+  marker-set-id: "continent-regions"
+  marker-set-label: "Continents"
+  # Y level the flat shape marker is drawn at.
+  default-shape-y: 80
+  default-line-width: 3
+  default-fill-opacity: 0.25
+  default-line-opacity: 0.9
+
+editor:
+  enabled: true
+  # Bind address/port of the plugin REST API (separate from the BlueMap web server).
+  bind: "0.0.0.0"
+  port: 8124
+  # Editor session token lifetime.
+  token-expire-minutes: 30
+  max-points-per-continent: 1000
+  validate-self-intersection: true
+  # Minimum polygon area in blocks^2 (0 = no minimum).
+  min-area: 0.0
+  # Warn (but still allow) when polygon area exceeds this in blocks^2 (0 = no warning).
+  warn-area: 0.0
+  # Ramer-Douglas-Peucker outline simplification on save (v2). When enabled,
+  # outlines are thinned so no point deviates more than simplify-tolerance blocks.
+  simplify-on-save: false
+  simplify-tolerance: 5.0
+  # Overlap check against other continents in the same world (v2):
+  #   error = reject the save, warn = allow but warn, off = no check.
+  overlap-policy: "warn"
+  # Base URL of the BlueMap web app where the editor addon is served.
+  # /continent editor appends "?token=..." to this link.
+  editor-url: "http://localhost:8100/#continent-editor"
+  # CORS: only these origins may call the REST API from a browser.
+  # Set this to your BlueMap web app origin(s). "*" is allowed for local testing only.
+  cors-allowed-origins:
+    - "http://localhost:8100"
+
+storage:
+  # yaml | sqlite  (v2 adds the SQLite backend)
+  type: "yaml"
+  file: "continents.yml"
+  sqlite-file: "continents.db"
+  # When switching to sqlite, import an existing continents.yml on first start.
+  migrate-on-start: true
+
+# Per-continent version history for rollback (v2). A snapshot of the previous
+# state is taken before every create/update/delete.
+history:
+  enabled: true
+  max-versions: 10
+
+# Named flag bundles applied with `/continent preset <id> <name>` or from the
+# editor (v2). Each entry is a map of WorldGuard flag -> value (allow/deny/none
+# for state flags, free text for string flags).
+flag-presets:
+  safe-zone:
+    pvp: deny
+    mob-spawning: deny
+    creeper-explosion: deny
+    tnt: deny
+  pvp-zone:
+    pvp: allow
+    mob-spawning: allow
+  build-protected:
+    build: deny
