@@ -1,6 +1,6 @@
 plugins {
     java
-    id("com.gradleup.shadow") version "8.3.6"
+    id("com.gradleup.shadow") version "9.4.2"
     id("xyz.jpenilla.run-paper") version "2.3.1"
 }
 
@@ -45,7 +45,8 @@ dependencies {
     // break. Bukkit's per-plugin classloader isolates it from other plugins.
     implementation("org.xerial:sqlite-jdbc:3.47.1.0")
 
-    testImplementation("org.junit.jupiter:junit-jupiter:5.11.3")
+    testImplementation("org.junit.jupiter:junit-jupiter:6.1.0")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("org.mockito:mockito-core:5.23.0")
 }
 
@@ -70,6 +71,8 @@ tasks {
         // Relocate bundled libraries to avoid clashes with other plugins / the server.
         // No minimize(): Gson resolves type adapters reflectively and minimize can strip them.
         relocate("com.google.gson", "com.example.continentregions.lib.gson")
+        // Keep the SQLite JDBC driver's META-INF/services/java.sql.Driver intact.
+        mergeServiceFiles()
     }
 
     build {
