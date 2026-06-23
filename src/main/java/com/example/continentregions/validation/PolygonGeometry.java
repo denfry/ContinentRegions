@@ -55,6 +55,33 @@ public final class PolygonGeometry {
         return strictlyInside(ca[0], ca[1], b) || strictlyInside(cb[0], cb[1], a);
     }
 
+    /**
+     * Point-in-polygon test for region membership: {@code true} when (x, z) is
+     * inside the polygon or exactly on its boundary (edge-inclusive).
+     */
+    public static boolean containsPoint(List<ContinentPoint> poly, double x, double z) {
+        if (poly == null || poly.size() < 3) {
+            return false;
+        }
+        final int n = poly.size();
+        boolean inside = false;
+        for (int i = 0, j = n - 1; i < n; j = i++) {
+            final double xi = poly.get(i).x();
+            final double zi = poly.get(i).z();
+            final double xj = poly.get(j).x();
+            final double zj = poly.get(j).z();
+            if (onSegment(x, z, xi, zi, xj, zj)) {
+                return true; // on the boundary counts as inside
+            }
+            final boolean crosses = (zi > z) != (zj > z)
+                    && x < (xj - xi) * (z - zi) / (zj - zi) + xi;
+            if (crosses) {
+                inside = !inside;
+            }
+        }
+        return inside;
+    }
+
     /** Standard even-odd ray cast; points exactly on an edge return {@code false}. */
     static boolean strictlyInside(double x, double z, List<ContinentPoint> poly) {
         final int n = poly.size();

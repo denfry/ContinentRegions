@@ -142,6 +142,7 @@
         // Drawing / editing controls
         var buttons = el("div", { class: "cr-buttons" }, panel);
         ui.draw = el("button", { class: "cr-btn", text: "Draw" }, buttons);
+        ui.move = el("button", { class: "cr-btn", text: "Move pts" }, buttons);
         ui.undo = el("button", { class: "cr-btn", text: "↶ Undo" }, buttons);
         ui.redo = el("button", { class: "cr-btn", text: "↷ Redo" }, buttons);
         ui.clear = el("button", { class: "cr-btn", text: "Clear" }, buttons);
@@ -173,6 +174,7 @@
         ui.status = el("div", { id: "cr-status" }, panel);
 
         ui.draw.addEventListener("click", toggleDraw);
+        ui.move.addEventListener("click", toggleMove);
         ui.undo.addEventListener("click", undo);
         ui.redo.addEventListener("click", redo);
         ui.clear.addEventListener("click", clearPoints);
@@ -250,6 +252,8 @@
         var suffix = "";
         if (clickMode === "draw") { suffix = " (drawing — click the map)"; }
         else if (clickMode === "move") { suffix = " (move — click the map to place vertex #" + (pendingMoveIndex + 1) + ")"; }
+        else if (clickMode === "movegrab") { suffix = " (move — click a point on the map to grab it)"; }
+        else if (clickMode === "moveplace") { suffix = " (move — click where to drop point #" + (pendingMoveIndex + 1) + ")"; }
         ui.points.textContent = "Points: " + points.length + suffix;
     }
 
@@ -544,9 +548,39 @@
             clickMode = "draw";
             pendingMoveIndex = -1;
             ui.draw.classList.add("cr-active");
+            ui.move.classList.remove("cr-active");
             status("Draw mode ON — click the map to add points.");
         }
         updatePointsLabel();
+    }
+
+    /** Move mode: click a point on the map to grab it, then click to drop it. */
+    function toggleMove() {
+        if (clickMode === "movegrab" || clickMode === "moveplace") {
+            clickMode = null;
+            pendingMoveIndex = -1;
+            ui.move.classList.remove("cr-active");
+            status("Move mode off.");
+        } else {
+            if (points.length === 0) { status("No points to move yet — draw some first.", null); return; }
+            clickMode = "movegrab";
+            pendingMoveIndex = -1;
+            ui.move.classList.add("cr-active");
+            ui.draw.classList.remove("cr-active");
+            status("Move mode ON — click a point on the map to grab it.");
+        }
+        updatePointsLabel();
+    }
+
+    /** Index of the outline vertex nearest to world coordinate (x, z). */
+    function nearestVertex(x, z) {
+        var best = -1, bestD = Infinity;
+        for (var i = 0; i < points.length; i++) {
+            var dx = points[i].x - x, dz = points[i].z - z;
+            var d = dx * dx + dz * dz;
+            if (d < bestD) { bestD = d; best = i; }
+        }
+        return best;
     }
 
     function updatePreview() {
@@ -585,10 +619,27 @@
 
     function onMapClick(x, z) {
         if (clickMode === "move" && pendingMoveIndex >= 0 && pendingMoveIndex < points.length) {
+            // single pick-on-map from a vertex row (⌖)
             editVertex(pendingMoveIndex, x, z);
             clickMode = null;
             pendingMoveIndex = -1;
             status("Vertex moved.", "ok");
+            updatePointsLabel();
+        } else if (clickMode === "movegrab") {
+            // grab the existing point nearest to the click
+            var idx = nearestVertex(x, z);
+            if (idx < 0) { status("No points to move.", null); return; }
+            pendingMoveIndex = idx;
+            clickMode = "moveplace";
+            status("Grabbed point #" + (idx + 1) + " — click where to move it.", null);
+            updatePointsLabel();
+        } else if (clickMode === "moveplace" && pendingMoveIndex >= 0 && pendingMoveIndex < points.length) {
+            // drop it at the click, then stay in move mode for the next point
+            var moved = pendingMoveIndex;
+            pendingMoveIndex = -1;
+            clickMode = "movegrab";
+            editVertex(moved, x, z); // records undo + re-renders the outline
+            status("Moved point #" + (moved + 1) + ". Click another point, or press Move to finish.", "ok");
             updatePointsLabel();
         } else if (clickMode === "draw") {
             addPoint(x, z);

@@ -49,4 +49,14 @@ class PolygonGeometryTest {
         // Touch at the single point (10,10).
         assertFalse(PolygonGeometry.overlaps(square(0, 0, 10), square(10, 10, 10)));
     }
+
+    @Test
+    void containsPointInsideOnBoundaryAndOutside() {
+        final List<ContinentPoint> sq = square(0, 0, 10);
+        assertTrue(PolygonGeometry.containsPoint(sq, 5, 5));   // interior
+        assertTrue(PolygonGeometry.containsPoint(sq, 0, 5));   // on an edge
+        assertTrue(PolygonGeometry.containsPoint(sq, 10, 10)); // on a corner
+        assertFalse(PolygonGeometry.containsPoint(sq, 20, 5)); // outside
+        assertFalse(PolygonGeometry.containsPoint(sq, -1, -1));
+    }
 }

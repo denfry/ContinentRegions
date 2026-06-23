@@ -331,6 +331,24 @@ public final class ContinentService {
         return hits;
     }
 
+    /**
+     * @return the highest-priority continent in {@code worldName} whose polygon
+     * contains (x, z), or empty when the point is outside every continent.
+     */
+    public Optional<Continent> continentAt(String worldName, double x, double z) {
+        Continent best = null;
+        for (Continent c : repository.findAll()) {
+            if (!worldName.equals(c.getWorldName()) || c.getPoints().size() < 3) {
+                continue;
+            }
+            if (PolygonGeometry.containsPoint(c.getPoints(), x, z)
+                    && (best == null || c.getPriority() > best.getPriority())) {
+                best = c;
+            }
+        }
+        return Optional.ofNullable(best);
+    }
+
     private static Continent copyOf(Continent c) {
         final Continent copy = new Continent();
         copy.setId(c.getId());

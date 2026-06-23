@@ -40,7 +40,7 @@ public final class CommandManager implements CommandExecutor, TabCompleter {
 
     private static final List<String> SUBCOMMANDS = List.of(
             "editor", "list", "create", "delete", "apply", "reload", "export", "import", "flag", "tp",
-            "preset", "simplify", "rollback", "history", "toggle");
+            "preset", "simplify", "rollback", "history", "toggle", "notify", "border");
 
     private static final List<String> FLAG_NAMES = List.of(
             "pvp", "build", "entry", "exit", "mob-spawning", "creeper-explosion", "tnt", "greeting", "farewell");
@@ -81,6 +81,8 @@ public final class CommandManager implements CommandExecutor, TabCompleter {
             case "rollback" -> rollback(sender, args);
             case "history" -> history(sender, args);
             case "toggle" -> toggle(sender, args);
+            case "notify" -> toggleNotify(sender);
+            case "border" -> border(sender, args);
             default -> sendUsage(sender);
         }
         return true;
@@ -486,6 +488,69 @@ public final class CommandManager implements CommandExecutor, TabCompleter {
         info(sender, "Continent '" + id + "' is now " + (hidden ? "hidden from" : "shown on") + " BlueMap.");
     }
 
+    private void toggleNotify(CommandSender sender) {
+        if (!(sender instanceof Player player)) {
+            error(sender, "Only players can toggle region notifications.");
+            return;
+        }
+        if (!checkPerm(sender, "continent.view")) {
+            return;
+        }
+        final boolean on = plugin.regionNotifier().toggle(player.getUniqueId());
+        info(sender, on
+                ? "Region notifications ON — you'll be told when you enter or leave a continent."
+                : "Region notifications OFF.");
+    }
+
+    private void border(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player player)) {
+            error(sender, "Only players can show borders.");
+            return;
+        }
+        if (!checkPerm(sender, "continent.view")) {
+            return;
+        }
+        final String worldName = player.getWorld().getName();
+        final Continent continent;
+        if (args.length >= 2) {
+            final String id = args[1].toLowerCase(Locale.ROOT);
+            final Optional<Continent> opt = service.get(id);
+            if (opt.isEmpty()) {
+                error(sender, "Continent '" + id + "' not found.");
+                return;
+            }
+            continent = opt.get();
+        } else {
+            final Optional<Continent> here = service.continentAt(
+                    worldName, player.getLocation().getX(), player.getLocation().getZ());
+            if (here.isEmpty()) {
+                error(sender, "You are not standing in a continent. Use: /continent border <id>");
+                return;
+            }
+            continent = here.get();
+        }
+        if (continent.getPoints().size() < 3) {
+            error(sender, "Continent '" + continent.getId() + "' has no outline to show.");
+            return;
+        }
+        if (!continent.getWorldName().equals(worldName)) {
+            error(sender, "Continent '" + continent.getId() + "' is in world '"
+                    + continent.getWorldName() + "', but you are in '" + worldName + "'.");
+            return;
+        }
+        int seconds = 15;
+        if (args.length >= 3) {
+            try {
+                seconds = Math.max(1, Math.min(60, Integer.parseInt(args[2])));
+            } catch (NumberFormatException e) {
+                error(sender, "Seconds must be a number (1-60).");
+                return;
+            }
+        }
+        plugin.borderRenderer().show(player, continent, seconds);
+        info(sender, "Showing the border of '" + continent.getId() + "' for " + seconds + "s.");
+    }
+
     // --- tab completion --------------------------------------------------
 
     @Override
@@ -503,7 +568,7 @@ public final class CommandManager implements CommandExecutor, TabCompleter {
                     yield filter(opts, args[1]);
                 }
                 case "delete", "flag", "tp",
-                     "preset", "simplify", "rollback", "history", "toggle" -> filter(continentIds(), args[1]);
+                     "preset", "simplify", "rollback", "history", "toggle", "border" -> filter(continentIds(), args[1]);
                 case "create" -> List.of("<id>");
                 default -> List.of();
             };

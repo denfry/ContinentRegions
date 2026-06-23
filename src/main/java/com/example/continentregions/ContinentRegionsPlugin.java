@@ -6,6 +6,8 @@ import com.example.continentregions.config.ConfigManager;
 import com.example.continentregions.editor.ContinentJson;
 import com.example.continentregions.editor.EditorHttpServer;
 import com.example.continentregions.editor.EditorSessionService;
+import com.example.continentregions.presence.BorderRenderer;
+import com.example.continentregions.presence.RegionNotifier;
 import com.example.continentregions.service.ContinentService;
 import com.example.continentregions.service.HistoryService;
 import com.example.continentregions.storage.ContinentRepository;
@@ -36,6 +38,8 @@ public final class ContinentRegionsPlugin extends JavaPlugin {
     private BlueMapHook blueMapHook;
     private EditorSessionService editorSessionService;
     private EditorHttpServer editorHttpServer;
+    private RegionNotifier regionNotifier;
+    private BorderRenderer borderRenderer;
     private boolean blueMapPresent;
 
     @Override
@@ -100,6 +104,10 @@ public final class ContinentRegionsPlugin extends JavaPlugin {
             getLogger().info("Editor REST API disabled in config (editor.enabled: false).");
         }
 
+        this.borderRenderer = new BorderRenderer(this);
+        this.regionNotifier = new RegionNotifier(this, continentService);
+        getServer().getScheduler().runTaskTimer(this, regionNotifier, 40L, 10L);
+
         final CommandManager commandManager = new CommandManager(this);
         final PluginCommand continentCommand = getCommand("continent");
         if (continentCommand != null) {
@@ -114,6 +122,7 @@ public final class ContinentRegionsPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        getServer().getScheduler().cancelTasks(this);
         if (editorHttpServer != null) {
             editorHttpServer.stop();
         }
@@ -215,6 +224,14 @@ public final class ContinentRegionsPlugin extends JavaPlugin {
 
     public EditorSessionService editorSessionService() {
         return editorSessionService;
+    }
+
+    public RegionNotifier regionNotifier() {
+        return regionNotifier;
+    }
+
+    public BorderRenderer borderRenderer() {
+        return borderRenderer;
     }
 
     public boolean isBlueMapPresent() {

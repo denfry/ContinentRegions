@@ -1,11 +1,11 @@
 plugins {
     java
     id("com.gradleup.shadow") version "9.4.2"
-    id("xyz.jpenilla.run-paper") version "2.3.1"
+    id("xyz.jpenilla.run-paper") version "3.0.2"
 }
 
 group = "com.example.continentregions"
-version = "2.0.0"
+version = "2.1.0"
 
 java {
     toolchain {
@@ -43,7 +43,7 @@ dependencies {
     // SQLite backend (v2). Deliberately NOT relocated: the xerial driver loads a
     // native library from a package-derived resource path, which relocation would
     // break. Bukkit's per-plugin classloader isolates it from other plugins.
-    implementation("org.xerial:sqlite-jdbc:3.47.1.0")
+    implementation("org.xerial:sqlite-jdbc:3.53.2.0")
 
     testImplementation("org.junit.jupiter:junit-jupiter:6.1.0")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")

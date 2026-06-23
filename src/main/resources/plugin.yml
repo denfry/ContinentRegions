@@ -13,7 +13,7 @@ softdepend:
 commands:
   continent:
     description: Continent region editor
-    usage: /continent <editor|list|create|delete|apply|reload|export|import|flag|tp|preset|simplify|rollback|history|toggle>
+    usage: /continent <editor|list|create|delete|apply|reload|export|import|flag|tp|preset|simplify|rollback|history|toggle|notify|border>
     permission: continent.view
 
 permissions:
