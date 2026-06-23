@@ -4,6 +4,17 @@ All notable changes to **ContinentRegions** are documented here. The format is
 based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 follows [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Fixed
+- **Editor link lost its token, leaving the editor panel empty.** `/continent
+  editor` appended `?token=…` to `editor-url`, but the default `editor-url` ended
+  in `#continent-editor`, so the token landed in the URL **hash fragment**. BlueMap
+  is a single-page app that rewrites `location.hash` on load, dropping the token
+  before the editor addon reads it — the panel never built (no buttons). The token
+  is now inserted as a query parameter **before** any `#fragment`, and the default
+  `editor.editor-url` is simplified to `http://localhost:8100/`.
+
 ## [2.1.0] - 2026-06-23
 
 ### Added
