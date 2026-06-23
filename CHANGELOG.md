@@ -4,6 +4,23 @@ All notable changes to **ContinentRegions** are documented here. The format is
 based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 follows [Semantic Versioning](https://semver.org/).
 
+## [2.1.0] - 2026-06-23
+
+### Added
+- **Region entry/exit notifications** (`RegionNotifier`): players opt in with
+  `/continent notify`; a lightweight repeating task then tells them in chat when
+  they enter (`» You entered <name>`) or leave (`« You left <name>`) a continent.
+- **In-game border rendering** (`BorderRenderer`): `/continent border [id] [seconds]`
+  draws a continent's outline with coloured `DUST` particles (the continent's own
+  colour). Defaults to the continent you are standing in; only the portion near the
+  player is drawn and it follows the surface, so the cost stays bounded regardless
+  of continent size. Duration is clamped to 1–60s (default 15s).
+- **Move-points editor mode** ("Move pts" button): grab an existing outline vertex
+  by clicking it on the map, then click again to drop it — an approximate drag for
+  repositioning points, complementing the per-row pick-on-map (⌖).
+- `PolygonGeometry.containsPoint` (edge-inclusive ray cast) and
+  `ContinentService.continentAt(world, x, z)` backing the two new commands.
+
 ## [2.0.0] - 2026-06-14
 
 ### Added
@@ -47,4 +64,5 @@ follows [Semantic Versioning](https://semver.org/).
   `export`, `import`, `flag`, `tp`), a token-secured REST API and the BlueMap
   editor addon.
 
+[2.1.0]: https://github.com/denfry/ContinentRegions/releases/tag/v2.1.0
 [2.0.0]: https://github.com/denfry/ContinentRegions/releases/tag/v2.0.0

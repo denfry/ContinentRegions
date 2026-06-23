@@ -9,7 +9,9 @@ run/
 # Claude / local tooling
 .claude/
 .playwright-mcp/
+.mcp.json
 cr-editor-working.png
+clipboard-*.png
 
 # Internal spec (Russian) — not part of the published plugin
 *_TZ.pdf

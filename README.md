@@ -94,6 +94,8 @@ All under `/continent`:
 | `rollback <id>`       | `continent.admin`  | Restore the previous saved version (v2)  |
 | `history <id>`        | `continent.view`   | List saved versions (v2)                 |
 | `toggle <id> [show\|hide]` | `continent.editor` | Show/hide a continent on BlueMap (v2) |
+| `notify`              | `continent.view`   | Toggle chat alerts when you enter/leave a continent (v2.1) |
+| `border [id] [secs]`  | `continent.view`   | Draw a continent's outline in-game with particles, 1–60s (v2.1) |
 
 Permissions: `continent.admin` (op) implies all; `continent.view` defaults to true.
 
@@ -176,6 +178,8 @@ The BlueMap editor panel supports:
 - **Draw** mode (click the map to add outline points) and a **vertex list** with
   per-point X/Z editing, reorder (↑/↓), insert-after (+), delete (✕) and
   **pick-on-map** (⌖) to reposition a vertex by clicking the map.
+- **Move pts** mode (v2.1): grab an existing vertex by clicking it on the map, then
+  click again to drop it — a quick way to drag points without using the vertex list.
 - **Undo/redo** over all edits (Ctrl+Z / Ctrl+Y or Ctrl+Shift+Z).
 - A **flag editor** with add/remove rows and **config presets** (apply locally,
   then Save).
@@ -186,8 +190,9 @@ The BlueMap editor panel supports:
 
 - WorldGuard polygon regions are 2D (X/Z) with a `minY..maxY` range, not arbitrary 3D.
 - No polygon holes; model lakes as separate higher-priority regions.
-- Vertices are edited via the panel + pick-on-map; BlueMap's public JS API does
-  not expose direct in-canvas marker dragging.
+- Vertices are edited via the panel, pick-on-map and **Move pts** (click-to-grab,
+  click-to-drop); BlueMap's public JS API does not expose true in-canvas marker
+  dragging, so moving a point is two clicks rather than a continuous drag.
 - Overlap detection compares polygon interiors; identical/edge-adjacent tiling is
   allowed, true area overlaps are flagged per `editor.overlap-policy`.
 - Very detailed coastlines should respect `max-points-per-continent`.
