@@ -4,7 +4,7 @@ All notable changes to **ContinentRegions** are documented here. The format is
 based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 follows [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [2.1.1] - 2026-06-23
 
 ### Fixed
 - **Editor link lost its token, leaving the editor panel empty.** `/continent
@@ -75,5 +75,6 @@ follows [Semantic Versioning](https://semver.org/).
   `export`, `import`, `flag`, `tp`), a token-secured REST API and the BlueMap
   editor addon.
 
+[2.1.1]: https://github.com/denfry/ContinentRegions/releases/tag/v2.1.1
 [2.1.0]: https://github.com/denfry/ContinentRegions/releases/tag/v2.1.0
 [2.0.0]: https://github.com/denfry/ContinentRegions/releases/tag/v2.0.0
