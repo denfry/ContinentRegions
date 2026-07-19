@@ -45,7 +45,7 @@ dependencies {
     // break. Bukkit's per-plugin classloader isolates it from other plugins.
     implementation("org.xerial:sqlite-jdbc:3.53.2.0")
 
-    testImplementation("org.junit.jupiter:junit-jupiter:6.1.0")
+    testImplementation("org.junit.jupiter:junit-jupiter:6.1.2")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("org.mockito:mockito-core:5.23.0")
 }
